@@ -1,0 +1,10 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: oxlint
+      glob: "*.{js,mjs,cjs,ts,mts,cts,astro}"
+      run: pnpm exec oxlint {staged_files}
+
+    - name: oxfmt
+      glob: "*.{js,mjs,cjs,ts,mts,cts,json,jsonc,yaml,yml,md}"
+      run: pnpm exec oxfmt --check {staged_files}
