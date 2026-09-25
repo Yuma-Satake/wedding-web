@@ -1,5 +1,6 @@
 ---
 import SectionTitle from "./SectionTitle.astro";
+import SurveyLink from "./SurveyLink.astro";
 
 const routes = [
   {
@@ -24,8 +25,9 @@ const routes = [
   <SectionTitle en="Shuttle Bus" ja="送迎バス" />
 
   <p class="mx-auto mt-8 max-w-sm text-center text-sm leading-loose tracking-wider text-ink">
-    送迎バスを利用される方は<br />新郎・新婦まで事前にご一報ください
+    送迎バスを利用される方は<br />アンケートにてお知らせください
   </p>
+  <SurveyLink />
 
   <div class="mx-auto mt-6 max-w-sm space-y-5">
     {
