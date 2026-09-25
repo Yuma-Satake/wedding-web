@@ -11,15 +11,18 @@
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
     "test": "vitest run",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "og": "sh scripts/generate-og.sh"
   },
   "dependencies": {
     "astro": "^7.3.4"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
     "lefthook": "2.1.14",
     "oxfmt": "0.70.0",
     "oxlint": "1.85.0",
+    "tailwindcss": "4.3.3",
     "vitest": "5.0.1"
   },
   "engines": {
