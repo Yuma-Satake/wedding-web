@@ -1,0 +1,62 @@
+---
+import Bouquet from "./Bouquet.astro";
+
+const petals = [
+  { x: 6, d: -2, t: 16, s: 1, c: "#F4C2C2" },
+  { x: 18, d: -9, t: 19, s: 0.8, c: "#C41E3A" },
+  { x: 31, d: -5, t: 14, s: 1.2, c: "#F4C2C2" },
+  { x: 44, d: -12, t: 21, s: 0.7, c: "#FFFDFB" },
+  { x: 57, d: -1, t: 17, s: 1, c: "#C41E3A" },
+  { x: 69, d: -7, t: 15, s: 0.9, c: "#F4C2C2" },
+  { x: 81, d: -14, t: 20, s: 1.1, c: "#FFFDFB" },
+  { x: 92, d: -4, t: 18, s: 0.8, c: "#F4C2C2" },
+];
+---
+
+<section class="relative overflow-hidden px-5 pt-8 pb-12 lg:hidden">
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    {
+      petals.map((p) => (
+        <span
+          class="petal"
+          style={`--x:${p.x}%;--d:${p.d}s;--t:${p.t}s;--s:${p.s};--c:${p.c}`}
+        />
+      ))
+    }
+  </div>
+
+  <div
+    class="relative mx-auto max-w-[360px] rounded-t-full border border-deep-red/40 p-1.5"
+  >
+    <div
+      class="rounded-t-full border border-deep-red/25 px-4 pt-10 pb-10 text-center"
+    >
+      <Bouquet class="mx-auto w-52" />
+
+      <p class="mt-4 font-roman lining-nums text-base tracking-[0.12em] text-rose-taupe italic" lang="en">
+        The Wedding of
+      </p>
+      <p class="mt-1 font-script text-[2.9rem] leading-tight whitespace-nowrap text-deep-red" lang="en">
+        Yuma <span class="text-[2rem]">&amp;</span> Aimi
+      </p>
+
+      <h1 class="mt-4 text-lg font-medium tracking-[0.2em] text-ink">
+        佐竹 友真<span class="mx-2 text-deep-red">・</span>阿部 愛望
+      </h1>
+
+      <div class="mx-auto mt-8 flex max-w-[15rem] items-center gap-3 text-deep-red/60">
+        <span class="h-px flex-1 bg-current"></span>
+        <span class="h-1.5 w-1.5 rotate-45 bg-current"></span>
+        <span class="h-px flex-1 bg-current"></span>
+      </div>
+
+      <p class="mt-5 font-roman lining-nums text-[2rem] leading-none font-medium tracking-[0.12em] text-ink">
+        2026.11.07
+      </p>
+      <p class="mt-2 font-roman lining-nums text-base tracking-[0.2em] text-rose-taupe italic" lang="en">
+        Saturday
+      </p>
+      <p class="mt-4 text-sm tracking-widest text-ink">長良川清流ホテル</p>
+    </div>
+  </div>
+</section>

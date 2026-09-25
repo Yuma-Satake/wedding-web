@@ -1,0 +1,43 @@
+---
+import SectionTitle from "./SectionTitle.astro";
+
+const address = "〒502-0012 岐阜県岐阜市長良志段見東山537-3";
+const mapQuery = "岐阜県岐阜市長良志段見東山537-3 長良川清流ホテル";
+const mapEmbedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=16&output=embed`;
+const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+---
+
+<section class="px-6 pt-20 pb-16">
+  <SectionTitle en="Access" ja="会場" />
+
+  <div class="mx-auto mt-8 max-w-sm text-center">
+    <p class="text-xl font-medium tracking-[0.15em] text-ink">長良川清流ホテル</p>
+    <p class="mt-2 text-sm leading-relaxed text-rose-taupe">{address}</p>
+
+    <div class="mt-6 border border-deep-red/30 bg-white p-1.5">
+      <iframe
+        class="block h-60 w-full border-0"
+        src={mapEmbedSrc}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="長良川清流ホテルの地図"
+      ></iframe>
+    </div>
+
+    <a
+      href={mapUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="mt-6 inline-flex items-center gap-2 rounded-full border border-deep-red px-6 py-2.5 text-sm tracking-widest text-deep-red transition-colors hover:bg-deep-red hover:text-ivory focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep-red"
+    >
+      Google マップで開く
+    </a>
+
+    <div class="mt-10 border-t border-dashed border-deep-red/40 pt-8 text-left">
+      <p class="text-center text-base font-medium tracking-[0.2em] text-ink">お車でお越しの方</p>
+      <p class="mt-4 text-sm leading-loose tracking-wider text-ink">
+        会場敷地内の無料駐車場をご利用いただけます。東海北陸自動車道「岐阜各務原IC」より車で約25分です。
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,130 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+const palettes = {
+  red: { base: "#C41E3A", line: "#8E1028" },
+  blush: { base: "#F4C2C2", line: "#D48790" },
+  white: { base: "#FFFDFB", line: "#DDBDB8" },
+};
+
+const roses = [
+  { x: 76, y: 94, s: 0.9, p: palettes.white },
+  { x: 162, y: 90, s: 0.95, p: palettes.blush },
+  { x: 118, y: 76, s: 1.15, p: palettes.red },
+  { x: 94, y: 126, s: 0.6, p: palettes.blush },
+  { x: 146, y: 124, s: 0.55, p: palettes.white },
+];
+
+const leaves = [
+  { x: 70, y: 112, r: 200 },
+  { x: 168, y: 110, r: -20 },
+  { x: 92, y: 52, r: 235 },
+  { x: 146, y: 50, r: -55 },
+  { x: 118, y: 138, r: 90 },
+  { x: 58, y: 80, r: 165 },
+  { x: 182, y: 74, r: 10 },
+];
+
+const buds = [
+  { x: 56, y: 58 },
+  { x: 184, y: 52 },
+  { x: 120, y: 34 },
+];
+
+const petalAngles = [0, 60, 120, 180, 240, 300];
+---
+
+<svg
+  class={className}
+  viewBox="0 0 240 230"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+>
+  <g stroke="#6B7A58" stroke-width="1.4" stroke-linecap="round">
+    <path d="M76 94 C92 128 108 150 118 168"></path>
+    <path d="M162 90 C148 126 130 150 120 168"></path>
+    <path d="M118 76 L119 168"></path>
+    <path d="M56 58 C78 96 104 138 117 168"></path>
+    <path d="M184 52 C160 96 134 138 121 168"></path>
+    <path d="M120 34 L119 76"></path>
+  </g>
+
+  {
+    leaves.map((l) => (
+      <g transform={`translate(${l.x} ${l.y}) rotate(${l.r})`}>
+        <path
+          d="M0 0 C10 -10 28 -12 42 0 C28 12 10 10 0 0Z"
+          fill="#7E8C6A"
+        />
+        <path
+          d="M3 0 L38 0"
+          stroke="#5F6E4F"
+          stroke-width="0.9"
+          stroke-linecap="round"
+        />
+      </g>
+    ))
+  }
+
+  {
+    buds.map((b) => (
+      <g transform={`translate(${b.x} ${b.y})`}>
+        <path d="M-4 3 C-4 -4 4 -4 4 3 Z" fill="#C41E3A" />
+        <path d="M-5 3 C-2 6 2 6 5 3" stroke="#6B7A58" stroke-width="1.2" />
+      </g>
+    ))
+  }
+
+  {
+    roses.map((r) => (
+      <g transform={`translate(${r.x} ${r.y}) scale(${r.s})`}>
+        {petalAngles.map((a) => (
+          <circle
+            cx={(18 * Math.cos((a * Math.PI) / 180)).toFixed(2)}
+            cy={(18 * Math.sin((a * Math.PI) / 180)).toFixed(2)}
+            r="12"
+            fill={r.p.base}
+            stroke={r.p.line}
+            stroke-width="1"
+          />
+        ))}
+        <circle r="22" fill={r.p.base} />
+        <path
+          d="M-17 9 Q-21 -12 0 -19"
+          stroke={r.p.line}
+          stroke-width="1.3"
+          stroke-linecap="round"
+        />
+        <path
+          d="M16 -7 Q19 14 -2 18"
+          stroke={r.p.line}
+          stroke-width="1.3"
+          stroke-linecap="round"
+        />
+        <path
+          d="M0 -2 a3 3 0 0 1 0 6 a5 5 0 0 1 0 -10 a7 7 0 0 1 0 14 a9 9 0 0 1 0 -18 a11 11 0 0 1 0 22"
+          stroke={r.p.line}
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </g>
+    ))
+  }
+
+  <g fill="#C41E3A">
+    <path d="M119 168 C100 150 78 156 82 170 C86 182 106 176 119 168Z"></path>
+    <path d="M119 168 C138 150 160 156 156 170 C152 182 132 176 119 168Z"></path>
+    <path d="M116 170 C110 188 102 204 92 222 L101 224 C109 208 116 190 120 172Z"></path>
+    <path d="M122 170 C128 188 136 204 146 222 L137 224 C129 208 122 190 118 172Z"></path>
+    <rect x="113" y="162" width="12" height="12" rx="4"></rect>
+  </g>
+  <g stroke="#8E1028" stroke-width="1" stroke-linecap="round" opacity="0.7">
+    <path d="M113 166 C104 160 94 160 88 166"></path>
+    <path d="M125 166 C134 160 144 160 150 166"></path>
+  </g>
+</svg>

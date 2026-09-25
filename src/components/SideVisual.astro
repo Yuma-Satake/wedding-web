@@ -1,0 +1,44 @@
+---
+import Bouquet from "./Bouquet.astro";
+import Countdown from "./Countdown.astro";
+
+interface Props {
+  nameTag?: "h1" | "p";
+}
+
+const { nameTag: NameTag = "h1" } = Astro.props;
+---
+
+<div class="relative flex w-full max-w-[520px] flex-col items-center text-center">
+  <p
+    class="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 font-script text-[11rem] leading-none whitespace-nowrap text-blush/70 select-none"
+    aria-hidden="true"
+  >
+    Wedding
+  </p>
+
+  <Bouquet class="relative w-44" />
+
+  <p class="relative mt-4 font-roman text-lg tracking-[0.15em] text-rose-taupe italic" lang="en">
+    The Wedding of
+  </p>
+  <p class="relative font-script text-[5.5rem] leading-tight text-deep-red" lang="en">
+    Yuma <span class="text-[3.75rem]">&amp;</span> Aimi
+  </p>
+  <NameTag class="relative mt-2 text-lg font-medium tracking-[0.2em] text-ink">
+    佐竹 友真<span class="mx-2 text-deep-red">・</span>阿部 愛望
+  </NameTag>
+
+  <div class="relative mt-8 flex w-64 items-center gap-3 text-deep-red/60" aria-hidden="true">
+    <span class="h-px flex-1 bg-current"></span>
+    <span class="h-1.5 w-1.5 rotate-45 bg-current"></span>
+    <span class="h-px flex-1 bg-current"></span>
+  </div>
+
+  <p class="relative mt-5 font-roman text-3xl font-medium tracking-[0.12em] text-ink lining-nums">
+    2026.11.07 <span class="text-xl text-rose-taupe italic">Sat.</span>
+  </p>
+  <p class="relative mt-2 text-sm tracking-widest text-ink">長良川清流ホテル</p>
+
+  <Countdown class="relative mt-12" />
+</div>
