@@ -1,0 +1,55 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+const weddingDate = "2026-11-07";
+---
+
+<section class={`text-center ${className}`} data-countdown data-date={weddingDate}>
+  <p class="font-script text-3xl text-deep-red" lang="en">Countdown</p>
+  <p class="mt-3 text-sm tracking-widest text-ink" data-countdown-before>
+    結婚式まであと
+    <span
+      class="mx-1 inline-block min-w-[3ch] font-roman lining-nums text-5xl leading-none font-medium text-deep-red"
+      data-countdown-days>--</span
+    >
+    日
+  </p>
+  <p class="mt-3 text-base tracking-widest text-ink" data-countdown-today hidden>
+    本日、結婚式を迎えます
+  </p>
+  <p class="mt-3 text-base tracking-widest text-ink" data-countdown-after hidden>
+    ご参列いただき、ありがとうございました
+  </p>
+</section>
+
+<script>
+  // 端末のタイムゾーンに依らず日本時間の暦日で日数を数える
+  const todayJst = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Tokyo" }).format(new Date());
+  const msPerDay = 24 * 60 * 60 * 1000;
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-countdown]")) {
+    if (!root.dataset.date) continue;
+    const days = Math.round((Date.parse(root.dataset.date) - Date.parse(todayJst)) / msPerDay);
+
+    const show = (key: string) => {
+      for (const el of root.querySelectorAll<HTMLElement>(
+        "[data-countdown-before],[data-countdown-today],[data-countdown-after]",
+      )) {
+        el.hidden = !el.hasAttribute(key);
+      }
+    };
+
+    if (days > 0) {
+      const daysEl = root.querySelector("[data-countdown-days]");
+      if (daysEl) daysEl.textContent = String(days);
+      show("data-countdown-before");
+    } else if (days === 0) {
+      show("data-countdown-today");
+    } else {
+      show("data-countdown-after");
+    }
+  }
+</script>

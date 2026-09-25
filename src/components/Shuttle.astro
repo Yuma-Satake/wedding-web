@@ -1,0 +1,76 @@
+---
+import SectionTitle from "./SectionTitle.astro";
+
+const routes = [
+  {
+    label: "往路",
+    from: "岐阜駅北口バス団体駐車場",
+    to: "長良川清流ホテル",
+    rows: [
+      { time: "9:45", note: "頃", text: "バス到着・ご乗車開始" },
+      { time: "10:00", text: "出発" },
+    ],
+  },
+  {
+    label: "復路",
+    from: "長良川清流ホテル",
+    to: "岐阜駅北口バス団体駐車場",
+    rows: [{ text: "披露宴終了後、随時出発" }],
+  },
+];
+---
+
+<section class="scallop-top scallop-bottom bg-blush-soft px-6 py-16">
+  <SectionTitle en="Shuttle Bus" ja="送迎バス" />
+
+  <p class="mx-auto mt-8 max-w-sm text-center text-sm leading-loose tracking-wider text-ink">
+    送迎バスを利用される方は<br />新郎・新婦まで事前にご一報ください
+  </p>
+
+  <div class="mx-auto mt-6 max-w-sm space-y-5">
+    {
+      routes.map((route) => (
+        <div class="border border-deep-red/30 bg-ivory px-5 py-5">
+          <div class="flex items-start gap-3">
+            <span class="flex-none rounded-full bg-deep-red px-3 py-1 text-xs tracking-widest whitespace-nowrap text-ivory">
+              {route.label}
+            </span>
+            <p class="pt-0.5 text-sm leading-relaxed tracking-wider text-ink">
+              {route.from}
+              <span class="mx-1.5 text-deep-red" aria-label="から">
+                ›
+              </span>
+              {route.to}
+            </p>
+          </div>
+          <div class="mt-4 space-y-2 border-t border-dashed border-deep-red/40 pt-4">
+            {route.rows.map((row) => (
+              <p class="flex items-baseline gap-3 text-sm text-ink">
+                {"time" in row && (
+                  <span class="w-16 flex-none font-roman lining-nums text-2xl leading-none font-medium text-deep-red">
+                    {row.time}
+                    {"note" in row && (
+                      <span class="ml-0.5 font-mincho text-xs text-rose-taupe">{row.note}</span>
+                    )}
+                  </span>
+                )}
+                <span class="tracking-wider">{row.text}</span>
+              </p>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="mt-8 text-center">
+    <a
+      href="/gifu-station-bus-map.pdf"
+      target="_blank"
+      rel="noopener"
+      class="inline-flex items-center gap-2 rounded-full border border-deep-red bg-ivory px-6 py-2.5 text-sm tracking-widest text-deep-red transition-colors hover:bg-deep-red hover:text-ivory focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep-red"
+    >
+      乗車場所の地図を見る（PDF）
+    </a>
+  </div>
+</section>

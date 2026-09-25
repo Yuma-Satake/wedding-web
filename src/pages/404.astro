@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Bouquet from "../components/Bouquet.astro";
+import SideVisual from "../components/SideVisual.astro";
+---
+
+<Layout
+  title="ページが見つかりません | 佐竹友真・阿部愛望 結婚式のご案内"
+  description="お探しのページは見つかりませんでした。"
+>
+  <SideVisual slot="aside" nameTag="p" />
+  <main class="flex min-h-screen flex-col items-center justify-center px-6 py-20 text-center">
+    <Bouquet class="w-32" />
+    <p class="mt-8 font-script text-5xl text-deep-red" lang="en">Not Found</p>
+    <h1 class="mt-4 text-base tracking-[0.2em] text-ink">ページが見つかりません</h1>
+    <p class="mt-5 text-sm leading-loose tracking-wider text-ink">
+      お探しのページは移動または<br />削除された可能性があります
+    </p>
+    <a
+      href="/"
+      class="mt-8 inline-flex items-center gap-2 rounded-full border border-deep-red px-6 py-2.5 text-sm tracking-widest text-deep-red transition-colors hover:bg-deep-red hover:text-ivory focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep-red"
+    >
+      ご案内ページへ戻る
+    </a>
+  </main>
+</Layout>

@@ -1,0 +1,16 @@
+---
+import Flourish from "./Flourish.astro";
+
+interface Props {
+  en: string;
+  ja: string;
+}
+
+const { en, ja } = Astro.props;
+---
+
+<hgroup class="text-center">
+  <p class="font-script text-[2.75rem] leading-none text-deep-red" lang="en">{en}</p>
+  <h2 class="mt-2 text-sm tracking-[0.3em] text-ink">{ja}</h2>
+  <Flourish class="mt-4" />
+</hgroup>
