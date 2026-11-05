@@ -1,6 +1,5 @@
 ---
 import SectionTitle from "./SectionTitle.astro";
-import SurveyLink from "./SurveyLink.astro";
 
 const routes = [
   {
@@ -30,7 +29,17 @@ const routes = [
   <p class="mx-auto mt-8 max-w-sm text-center text-sm leading-loose tracking-wider text-ink">
     送迎バスを利用される方は<br />アンケートにてお知らせください
   </p>
-  <SurveyLink />
+
+  <div class="mt-6 text-center">
+    <a
+      href="/gifu-station-bus-map.pdf"
+      target="_blank"
+      rel="noopener"
+      class="inline-flex items-center gap-2 rounded-full border border-deep-red bg-ivory px-6 py-2.5 text-sm tracking-widest text-deep-red transition-colors hover:bg-deep-red hover:text-ivory focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep-red"
+    >
+      乗車場所の地図を見る（PDF）
+    </a>
+  </div>
 
   <div class="mx-auto mt-6 max-w-sm space-y-5">
     {
@@ -66,16 +75,5 @@ const routes = [
         </div>
       ))
     }
-  </div>
-
-  <div class="mt-8 text-center">
-    <a
-      href="/gifu-station-bus-map.pdf"
-      target="_blank"
-      rel="noopener"
-      class="inline-flex items-center gap-2 rounded-full border border-deep-red bg-ivory px-6 py-2.5 text-sm tracking-widest text-deep-red transition-colors hover:bg-deep-red hover:text-ivory focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-deep-red"
-    >
-      乗車場所の地図を見る（PDF）
-    </a>
   </div>
 </section>
