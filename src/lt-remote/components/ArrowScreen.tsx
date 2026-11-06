@@ -6,7 +6,6 @@ type ArrowScreenProps = {
   roleLabel: string;
   caption: string;
   status: ConnectionStatus;
-  qr?: { src: string; caption: string };
 } & Pick<
   HTMLAttributes<HTMLElement>,
   "onPointerDown" | "onPointerUp" | "onPointerCancel" | "onContextMenu"
@@ -34,7 +33,6 @@ export const ArrowScreen = ({
   roleLabel,
   caption,
   status,
-  qr,
   ...pointerHandlers
 }: ArrowScreenProps): ReactElement => (
   <main
@@ -61,7 +59,7 @@ export const ArrowScreen = ({
             status === ConnectionStatus.Connected ? "bg-leaf" : "animate-pulse bg-rose-taupe"
           }`}
         />
-        {status === ConnectionStatus.Connected ? "接続中" : "接続しています"}
+        {status === ConnectionStatus.Connected ? "接続済み" : "接続を試みています"}
       </span>
     </header>
 
@@ -72,12 +70,5 @@ export const ArrowScreen = ({
     >
       {caption}
     </p>
-
-    {qr === undefined ? null : (
-      <figure className="absolute right-6 bottom-[max(1.5rem,env(safe-area-inset-bottom))] z-10 flex flex-col items-center gap-2 rounded-xl bg-ivory p-3 text-xs text-ink">
-        <img src={qr.src} alt={qr.caption} className="h-28 w-28" />
-        <figcaption>{qr.caption}</figcaption>
-      </figure>
-    )}
   </main>
 );
