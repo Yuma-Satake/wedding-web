@@ -1,0 +1,13 @@
+---
+import QRCode from "qrcode";
+import RemoteLayout from "../../layouts/RemoteLayout.astro";
+import { OperatorScreen } from "../../lt-remote/components/OperatorScreen";
+
+const speakerUrl = new URL("/lt-remote/speaker/", Astro.site).toString();
+const qrSvg = await QRCode.toString(speakerUrl, { type: "svg", margin: 1 });
+const speakerQrSrc = `data:image/svg+xml;utf8,${encodeURIComponent(qrSvg)}`;
+---
+
+<RemoteLayout title="機材操作者 | スライド送りリモコン">
+  <OperatorScreen speakerQrSrc={speakerQrSrc} client:only="react" />
+</RemoteLayout>

@@ -1,0 +1,14 @@
+---
+import RemoteLayout from "../../layouts/RemoteLayout.astro";
+
+const linkClass =
+  "flex w-full max-w-sm items-center justify-center rounded-2xl border-2 border-deep-red px-6 py-8 text-2xl font-bold tracking-widest text-deep-red active:bg-deep-red active:text-ivory";
+---
+
+<RemoteLayout title="スライド送りリモコン">
+  <main class="flex min-h-dvh flex-col items-center justify-center gap-6 px-6">
+    <h1 class="text-lg tracking-widest">スライド送りリモコン</h1>
+    <a href="/lt-remote/speaker/" class={linkClass}>登壇者</a>
+    <a href="/lt-remote/operator/" class={linkClass}>機材操作者</a>
+  </main>
+</RemoteLayout>

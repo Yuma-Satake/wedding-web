@@ -1,0 +1,8 @@
+---
+import RemoteLayout from "../../layouts/RemoteLayout.astro";
+import { SpeakerScreen } from "../../lt-remote/components/SpeakerScreen";
+---
+
+<RemoteLayout title="登壇者 | スライド送りリモコン">
+  <SpeakerScreen client:only="react" />
+</RemoteLayout>
