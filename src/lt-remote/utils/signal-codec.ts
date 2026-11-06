@@ -1,25 +1,31 @@
-import { SignalKind, type Signal } from "../types/signal";
+import { Direction, SignalKind, type Signal } from "../types/signal";
 
 const SEPARATOR = ":";
+
+const isSignalKind = (value: string): value is SignalKind =>
+  Object.values<string>(SignalKind).includes(value);
+
+const isDirection = (value: string): value is Direction =>
+  Object.values<string>(Direction).includes(value);
 
 /**
  * 信号をブローカーへ送る文字列に変換する。
  */
 export const encodeSignal = (signal: Signal): string =>
-  [signal.kind, signal.senderId, String(signal.seq)].join(SEPARATOR);
+  [signal.kind, signal.direction, signal.senderId, String(signal.seq)].join(SEPARATOR);
 
 /**
  * ブローカーから受け取った文字列を信号に変換する。形式が合わない場合は null を返す。
  */
 export const decodeSignal = (raw: string): Signal | null => {
-  const [kind, senderId, seqText, ...rest] = raw.split(SEPARATOR);
-  if (rest.length > 0 || senderId === undefined || seqText === undefined) return null;
+  const [kind, direction, senderId, seqText, ...rest] = raw.split(SEPARATOR);
+  if (rest.length > 0 || kind === undefined || direction === undefined) return null;
+  if (senderId === undefined || seqText === undefined) return null;
   if (senderId === "" || seqText === "") return null;
+  if (!isSignalKind(kind) || !isDirection(direction)) return null;
   const seq = Number(seqText);
   if (!Number.isFinite(seq)) return null;
-  if (kind === SignalKind.Press) return { kind: SignalKind.Press, senderId, seq };
-  if (kind === SignalKind.Release) return { kind: SignalKind.Release, senderId, seq };
-  return null;
+  return { kind, direction, senderId, seq };
 };
 
 /**
