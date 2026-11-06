@@ -16,8 +16,8 @@ const createChevronTile = (fill: string): string =>
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 100" preserveAspectRatio="none"><polygon points="0,0 24,0 56,50 24,100 0,100 32,50" fill="${fill}"/></svg>`,
   )}")`;
 
-const ACTIVE_TILE = createChevronTile("#f8f4f0");
-const IDLE_TILE = createChevronTile("#f6e0de");
+const ACTIVE_TILE = createChevronTile("#f1f6ff");
+const IDLE_TILE = createChevronTile("#dbe8ff");
 
 const chevronLayerStyle = (active: boolean): CSSProperties => ({
   backgroundImage: active ? ACTIVE_TILE : IDLE_TILE,
@@ -38,7 +38,7 @@ export const ArrowScreen = ({
   <main
     data-active={active}
     className={`relative flex h-dvh w-full touch-none flex-col items-center justify-center overflow-hidden select-none [-webkit-touch-callout:none] ${
-      active ? "bg-deep-red" : "bg-ivory"
+      active ? "bg-[#1d4ed8]" : "bg-[#f1f6ff]"
     }`}
     {...pointerHandlers}
   >
@@ -49,14 +49,14 @@ export const ArrowScreen = ({
     />
 
     <header className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 pt-[max(1.5rem,env(safe-area-inset-top))] text-sm tracking-widest">
-      <span className="rounded-full bg-ivory px-4 py-1.5 text-ink">{roleLabel}</span>
+      <span className="rounded-full bg-[#f1f6ff] px-4 py-1.5 text-slate-900">{roleLabel}</span>
       <span
-        className="flex items-center gap-2 rounded-full bg-ivory px-4 py-1.5 text-ink"
+        className="flex items-center gap-2 rounded-full bg-[#f1f6ff] px-4 py-1.5 text-slate-900"
         data-status={status}
       >
         <span
           className={`h-3 w-3 rounded-full ${
-            status === ConnectionStatus.Connected ? "bg-leaf" : "animate-pulse bg-rose-taupe"
+            status === ConnectionStatus.Connected ? "bg-leaf" : "animate-pulse bg-slate-400"
           }`}
         />
         {status === ConnectionStatus.Connected ? "接続済み" : "接続を試みています"}
@@ -64,8 +64,8 @@ export const ArrowScreen = ({
     </header>
 
     <p
-      className={`relative z-10 mx-6 rounded-3xl bg-ivory px-8 py-6 text-center text-3xl font-bold tracking-widest sm:text-5xl ${
-        active ? "text-deep-red" : "text-ink"
+      className={`relative z-10 mx-6 rounded-3xl bg-[#f1f6ff] px-8 py-6 text-center text-3xl font-bold tracking-widest sm:text-5xl ${
+        active ? "text-[#1d4ed8]" : "text-slate-900"
       }`}
     >
       {caption}
