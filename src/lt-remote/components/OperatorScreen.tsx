@@ -2,19 +2,24 @@ import { useCallback, useEffect, useState, type ReactElement } from "react";
 import { STALE_TIMEOUT_MS } from "../const/channel";
 import { useTransport } from "../hooks/useTransport";
 import { useWakeLock } from "../hooks/useWakeLock";
-import { SignalKind, type Signal } from "../types/signal";
+import { Direction, SignalKind, type Signal } from "../types/signal";
 import { shouldAcceptSignal } from "../utils/signal-codec";
 import { ArrowScreen } from "./ArrowScreen";
 
 type ReceivedState = {
-  pressed: boolean;
+  pressed: Direction | null;
   latestSeqBySender: Readonly<Record<string, number>>;
 };
 
-const initialState: ReceivedState = { pressed: false, latestSeqBySender: {} };
+const initialState: ReceivedState = { pressed: null, latestSeqBySender: {} };
+
+const CAPTION_BY_PRESSED = {
+  [Direction.Forward]: "登壇者が次のスライドへ進めようとしています",
+  [Direction.Back]: "登壇者が前のスライドへ戻そうとしています",
+} as const satisfies Record<Direction, string>;
 
 /**
- * 機材操作者用の画面。登壇者が次のスライドへ進む指示を送っている間、矢印を表示する。
+ * 機材操作者用の画面。登壇者がスライドを送る指示を出している間、その向きの矢印を表示する。
  * 登壇者の端末が通信を失って「離した」信号が届かない場合に備え、一定時間信号が途絶えたら表示を消す。
  */
 export const OperatorScreen = (): ReactElement => {
@@ -25,7 +30,7 @@ export const OperatorScreen = (): ReactElement => {
     setReceived((previous) =>
       shouldAcceptSignal(previous.latestSeqBySender, signal)
         ? {
-            pressed: signal.kind === SignalKind.Press,
+            pressed: signal.kind === SignalKind.Press ? signal.direction : null,
             latestSeqBySender: { ...previous.latestSeqBySender, [signal.senderId]: signal.seq },
           }
         : previous,
@@ -35,9 +40,9 @@ export const OperatorScreen = (): ReactElement => {
   const { status } = useTransport(handleSignal);
 
   useEffect(() => {
-    if (!received.pressed) return;
+    if (received.pressed === null) return;
     const timer = setTimeout(
-      () => setReceived((previous) => ({ ...previous, pressed: false })),
+      () => setReceived((previous) => ({ ...previous, pressed: null })),
       STALE_TIMEOUT_MS,
     );
     return () => clearTimeout(timer);
@@ -45,9 +50,9 @@ export const OperatorScreen = (): ReactElement => {
 
   return (
     <ArrowScreen
-      active={received.pressed}
+      activeDirection={received.pressed}
       roleLabel="機材操作者"
-      caption={received.pressed ? "登壇者が次のスライドへ進めようとしています" : "待機中"}
+      caption={received.pressed === null ? "待機中" : CAPTION_BY_PRESSED[received.pressed]}
       status={status}
     />
   );
