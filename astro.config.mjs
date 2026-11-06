@@ -2,9 +2,12 @@
 import { defineConfig, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 
+import react from "@astrojs/react";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://wedding.yuma-satake.com",
+
   fonts: [
     {
       provider: fontProviders.google(),
@@ -29,7 +32,10 @@ export default defineConfig({
       fallbacks: ["cursive"],
     },
   ],
+
   vite: {
     plugins: [tailwindcss()],
   },
+
+  integrations: [react()],
 });
