@@ -48,6 +48,19 @@ export const useHold = (transport: Transport | null): UseHoldResult => {
   }, [holding, transport, senderId]);
 
   useEffect(() => {
+    // iOS の Safari は長押しをシステムのジェスチャ（拡大鏡・メニュー）に取られ、ポインタ操作が途切れるため止める
+    const preventDefault = (event: Event): void => event.preventDefault();
+    document.addEventListener("touchstart", preventDefault, { passive: false });
+    document.addEventListener("touchmove", preventDefault, { passive: false });
+    document.addEventListener("contextmenu", preventDefault);
+    return () => {
+      document.removeEventListener("touchstart", preventDefault);
+      document.removeEventListener("touchmove", preventDefault);
+      document.removeEventListener("contextmenu", preventDefault);
+    };
+  }, []);
+
+  useEffect(() => {
     const release = (): void => setTouching(false);
     const handleVisibility = (): void => {
       if (document.visibilityState !== "visible") release();
