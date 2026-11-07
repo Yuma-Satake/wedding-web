@@ -1,34 +1,31 @@
 import type { ReactElement } from "react";
-import { useHold } from "../hooks/useHold";
-import { useTransport } from "../hooks/useTransport";
+import { useSlideRequest } from "../hooks/useSlideRequest";
 import { useWakeLock } from "../hooks/useWakeLock";
 import { Direction } from "../types/signal";
 import { ArrowScreen } from "./ArrowScreen";
 
-const ignoreSignal = (): void => undefined;
-
-const CAPTION_BY_HOLDING = {
-  [Direction.Forward]: "次のスライドへ進む指示を送信中",
-  [Direction.Back]: "前のスライドへ戻る指示を送信中",
+const CAPTION_BY_PENDING = {
+  [Direction.Forward]: "次のスライドへ進む指示を\n送信しました",
+  [Direction.Back]: "前のスライドへ戻る指示を\n送信しました",
 } as const satisfies Record<Direction, string>;
 
-const IDLE_CAPTION = "左を長押しで戻る\n右を長押しで進む";
+const IDLE_CAPTION = "左をタップで戻る\n右をタップで進む";
 
 /**
- * 登壇者用の画面。画面を左右に分け、左半分を長押しすると前のスライドへ戻る指示を、
- * 右半分を長押しすると次のスライドへ進む指示を、押している間だけ操作者へ送る。
+ * 登壇者用の画面。画面を左右に分け、左半分をタップすると前のスライドへ戻る指示を、
+ * 右半分をタップすると次のスライドへ進む指示を操作者へ送る。
+ * 指示は操作者がスライドを送って取り消すまで表示し続ける。
  */
 export const SpeakerScreen = (): ReactElement => {
   useWakeLock();
-  const { transport, status } = useTransport(ignoreSignal);
-  const { holding, handlers } = useHold(transport);
+  const { pending, status, handlers } = useSlideRequest();
 
   return (
     <ArrowScreen
-      activeDirection={holding}
+      activeDirection={pending}
       split
       roleLabel="登壇者"
-      caption={holding === null ? IDLE_CAPTION : CAPTION_BY_HOLDING[holding]}
+      caption={pending === null ? IDLE_CAPTION : CAPTION_BY_PENDING[pending]}
       status={status}
       {...handlers}
     />

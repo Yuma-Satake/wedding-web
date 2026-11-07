@@ -7,10 +7,7 @@ type ArrowScreenProps = {
   roleLabel: string;
   caption: string;
   status: ConnectionStatus;
-} & Pick<
-  HTMLAttributes<HTMLElement>,
-  "onPointerDown" | "onPointerUp" | "onPointerCancel" | "onContextMenu"
->;
+} & Pick<HTMLAttributes<HTMLElement>, "onPointerDown" | "onClick" | "onContextMenu">;
 
 type Lane = {
   direction: Direction;
@@ -37,7 +34,7 @@ const chevronLayerStyle = (active: boolean): CSSProperties => ({
 });
 
 /**
- * 全画面の矢印表示。画面全体を埋める山形が進む向きへ流れ、スライドを送る指示が出ている間は濃い青地で流れ続ける。
+ * 全画面の矢印表示。画面全体を埋める山形が進む向きへ流れ、スライドを送る指示が出ている間（取り消されるまで）は濃い青地で流れ続ける。
  * 戻る向きは山形を左右反転して左へ流す。split のときは画面を左右に分け、左を戻る・右を進むの領域として表示する。
  */
 export const ArrowScreen = ({

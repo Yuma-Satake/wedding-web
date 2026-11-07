@@ -1,59 +1,73 @@
-import { useCallback, useEffect, useState, type ReactElement } from "react";
-import { STALE_TIMEOUT_MS } from "../const/channel";
+import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
 import { useTransport } from "../hooks/useTransport";
 import { useWakeLock } from "../hooks/useWakeLock";
+import type { Transport } from "../services/transport";
 import { Direction, SignalKind, type Signal } from "../types/signal";
-import { shouldAcceptSignal } from "../utils/signal-codec";
+import { isClearedRequest, shouldReplaceRequest } from "../utils/signal-codec";
 import { ArrowScreen } from "./ArrowScreen";
 
-type ReceivedState = {
-  pressed: Direction | null;
-  latestSeqBySender: Readonly<Record<string, number>>;
-};
-
-const initialState: ReceivedState = { pressed: null, latestSeqBySender: {} };
-
-const CAPTION_BY_PRESSED = {
-  [Direction.Forward]: "登壇者が次のスライドへ進めようとしています",
-  [Direction.Back]: "登壇者が前のスライドへ戻そうとしています",
+const CAPTION_BY_REQUEST = {
+  [Direction.Forward]: "登壇者が次のスライドへ\n進めようとしています\n送ったら画面をタップ",
+  [Direction.Back]: "登壇者が前のスライドへ\n戻そうとしています\n送ったら画面をタップ",
 } as const satisfies Record<Direction, string>;
 
+const withCleared = (
+  clearedSeqBySender: Readonly<Record<string, number>>,
+  signal: Signal,
+): Record<string, number> => ({
+  ...clearedSeqBySender,
+  [signal.senderId]: Math.max(clearedSeqBySender[signal.senderId] ?? -Infinity, signal.seq),
+});
+
 /**
- * 機材操作者用の画面。登壇者がスライドを送る指示を出している間、その向きの矢印を表示する。
- * 登壇者の端末が通信を失って「離した」信号が届かない場合に備え、一定時間信号が途絶えたら表示を消す。
+ * 機材操作者用の画面。登壇者からスライド送りの依頼が届くと、その向きの矢印を表示し続ける。
+ * スライドを送った後に画面をタップすると依頼を取り消し、登壇者の画面の表示も消す。
  */
 export const OperatorScreen = (): ReactElement => {
   useWakeLock();
-  const [received, setReceived] = useState<ReceivedState>(initialState);
+  const [request, setRequest] = useState<Signal | null>(null);
+  const clearedSeqBySender = useRef<Record<string, number>>({});
+  const transportRef = useRef<Transport | null>(null);
 
   const handleSignal = useCallback((signal: Signal): void => {
-    setReceived((previous) =>
-      shouldAcceptSignal(previous.latestSeqBySender, signal)
-        ? {
-            pressed: signal.kind === SignalKind.Press ? signal.direction : null,
-            latestSeqBySender: { ...previous.latestSeqBySender, [signal.senderId]: signal.seq },
-          }
-        : previous,
-    );
+    if (signal.kind === SignalKind.Clear) {
+      // 別の操作者の端末で取り消された場合も表示を消す
+      clearedSeqBySender.current = withCleared(clearedSeqBySender.current, signal);
+      setRequest((previous) =>
+        previous !== null && isClearedRequest(clearedSeqBySender.current, previous)
+          ? null
+          : previous,
+      );
+      return;
+    }
+    if (isClearedRequest(clearedSeqBySender.current, signal)) {
+      // 取り消しが届かず登壇者が送り直してきた場合は、取り消しを伝え直す
+      transportRef.current?.publish({ ...signal, kind: SignalKind.Clear });
+      return;
+    }
+    setRequest((previous) => (shouldReplaceRequest(previous, signal) ? signal : previous));
   }, []);
 
-  const { status } = useTransport(handleSignal);
+  const { transport, status } = useTransport(handleSignal);
 
   useEffect(() => {
-    if (received.pressed === null) return;
-    const timer = setTimeout(
-      () => setReceived((previous) => ({ ...previous, pressed: null })),
-      STALE_TIMEOUT_MS,
-    );
-    return () => clearTimeout(timer);
-  }, [received]);
+    transportRef.current = transport;
+  }, [transport]);
+
+  const clearRequest = (): void => {
+    if (request === null) return;
+    clearedSeqBySender.current = withCleared(clearedSeqBySender.current, request);
+    transport?.publish({ ...request, kind: SignalKind.Clear });
+    setRequest(null);
+  };
 
   return (
     <ArrowScreen
-      activeDirection={received.pressed}
+      activeDirection={request?.direction ?? null}
       roleLabel="機材操作者"
-      caption={received.pressed === null ? "待機中" : CAPTION_BY_PRESSED[received.pressed]}
+      caption={request === null ? "待機中" : CAPTION_BY_REQUEST[request.direction]}
       status={status}
+      onClick={clearRequest}
     />
   );
 };

@@ -29,13 +29,20 @@ export const decodeSignal = (raw: string): Signal | null => {
 };
 
 /**
- * 受け取った信号を採用するか判定する。
- * 同じ送信元で、すでに採用した連番より古い信号（別ブローカー経由で遅れて届いたもの）は捨てる。
+ * 依頼がすでに取り消されたものか判定する。
+ * 送り直しの依頼が取り消しの後に届いた場合に、表示し直さないようにするためのもの。
  */
-export const shouldAcceptSignal = (
-  latestSeqBySender: Readonly<Record<string, number>>,
+export const isClearedRequest = (
+  clearedSeqBySender: Readonly<Record<string, number>>,
   signal: Signal,
 ): boolean => {
-  const latest = latestSeqBySender[signal.senderId];
-  return latest === undefined || signal.seq >= latest;
+  const cleared = clearedSeqBySender[signal.senderId];
+  return cleared !== undefined && signal.seq <= cleared;
 };
+
+/**
+ * 表示中の依頼を受け取った依頼で置き換えるか判定する。
+ * 同じ登壇者からの古い依頼（遅れて届いたもの）では置き換えない。
+ */
+export const shouldReplaceRequest = (current: Signal | null, signal: Signal): boolean =>
+  current === null || current.senderId !== signal.senderId || signal.seq >= current.seq;
