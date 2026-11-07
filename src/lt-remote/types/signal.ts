@@ -1,9 +1,10 @@
 /**
- * 登壇者から操作者へ送る信号の種類。
+ * 端末の間で送る信号の種類。
+ * Request は登壇者がスライド送りを頼む信号、Clear は操作者が送り終えて依頼を取り消す信号。
  */
 export const SignalKind = {
-  Press: "press",
-  Release: "release",
+  Request: "request",
+  Clear: "clear",
 } as const;
 
 export type SignalKind = (typeof SignalKind)[keyof typeof SignalKind];
@@ -19,8 +20,8 @@ export const Direction = {
 export type Direction = (typeof Direction)[keyof typeof Direction];
 
 /**
- * 登壇者の長押しの状態を表す信号。
- * 端末ごとに送信元を区別し、同じ送信元の中で順序が逆転した信号を捨てるために連番を持つ。
+ * スライド送りの依頼と、その取り消しを表す信号。
+ * senderId と seq は依頼した登壇者の端末と依頼ごとの番号で、取り消しの信号も取り消す依頼の値をそのまま持つ。
  */
 export type Signal = {
   kind: SignalKind;

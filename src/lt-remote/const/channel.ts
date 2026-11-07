@@ -21,16 +21,7 @@ export const PING_INTERVAL_MS = 15000;
 export const PONG_TIMEOUT_MS = 5000;
 
 /**
- * 長押しと判定するまでの時間（ミリ秒）。
+ * 取り消されるまで、登壇者の端末が依頼を送り直す間隔（ミリ秒）。
+ * 接続が一時的に切れた・操作者が後から画面を開いた場合でも依頼が届くようにするためのもの。
  */
-export const HOLD_THRESHOLD_MS = 300;
-
-/**
- * 長押し中に「押している」状態を再送する間隔（ミリ秒）。
- */
-export const HEARTBEAT_INTERVAL_MS = 400;
-
-/**
- * 登壇者側の通信が途絶えたとみなして操作者側の表示を消すまでの時間（ミリ秒）。
- */
-export const STALE_TIMEOUT_MS = 1500;
+export const RESEND_INTERVAL_MS = 1000;
